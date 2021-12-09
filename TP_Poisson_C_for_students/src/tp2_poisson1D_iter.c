@@ -41,7 +41,7 @@ int main(int argc,char *argv[])
   /* Setup the Poisson 1D problem */
   /* General Band Storage */
   set_grid_points_1D(X, &la);
-  set_dense_RHS_DBC_1D(RHS,&la,&T0,&T1);
+  set_dense_RHS_DBC_1D(RHS, &la, &T0, &T1);
   set_analytical_solution_DBC_1D(EX_SOL, X, &la, &T0, &T1);
   
   write_vec(RHS, &la, "RHS.dat");

@@ -22,7 +22,7 @@ int main(int argc,char *argv[])
   double temp, relres;
 
   NRHS=1;
-  nbpoints=102;
+  nbpoints=100002;
   la=nbpoints-2;
   T0=-5.0;
   T1=5.0;
@@ -58,14 +58,14 @@ int main(int argc,char *argv[])
     set_GB_operator_rowMajor_poisson1D(AB, &lab, &la);
     //write_GB_operator_rowMajor_poisson1D(AB, &lab, &la, "AB_row.dat");
     
-    info = LAPACKE_dgbsv(LAPACK_ROW_MAJOR,la, kl, ku, NRHS, AB, la, ipiv, RHS, NRHS);
+    info = LAPACKE_dgbsv(LAPACK_ROW_MAJOR, la, kl, ku, NRHS, AB, la, ipiv, RHS, NRHS);
   
   } 
   else { // LAPACK_COL_MAJOR
     set_GB_operator_colMajor_poisson1D(AB, &lab, &la, &kv);
     //write_GB_operator_colMajor_poisson1D(AB, &lab, &la, "AB_col.dat");
 
-    info = LAPACKE_dgbsv(LAPACK_COL_MAJOR,la, kl, ku, NRHS, AB, lab, ipiv, RHS, la);
+    info = LAPACKE_dgbsv(LAPACK_COL_MAJOR, la, kl, ku, NRHS, AB, lab, ipiv, RHS, la);
   }    
 
   
@@ -74,10 +74,10 @@ int main(int argc,char *argv[])
   write_xy(RHS, X, &la, "SOL.dat");
 
   /* Relative residual */
-  temp = cblas_ddot(la, RHS, 1, RHS,1);
+  temp = cblas_ddot(la, RHS, 1, RHS, 1);
   temp = sqrt(temp);
   cblas_daxpy(la, -1.0, RHS, 1, EX_SOL, 1);
-  relres = cblas_ddot(la, EX_SOL, 1, EX_SOL,1);
+  relres = cblas_ddot(la, EX_SOL, 1, EX_SOL, 1);
   relres = sqrt(relres);
   relres = relres / temp;
   
