@@ -18,7 +18,7 @@ int main(int argc,char *argv[])
   double T0, T1;
   double *RHS, *EX_SOL, *X;
   double *AB;
-
+  // kv est a 0 pour le produit matriciel , ou 1 sinon 
   double temp, relres;
 
   NRHS=1;
@@ -55,7 +55,7 @@ int main(int argc,char *argv[])
   int row = 0; //
 
   if (row == 1){ // LAPACK_ROW_MAJOR
-    set_GB_operator_rowMajor_poisson1D(AB, &lab, &la);
+    set_GB_operator_rowMajor_poisson1D(AB, &lab, &la, &kv);
     //write_GB_operator_rowMajor_poisson1D(AB, &lab, &la, "AB_row.dat");
     
     info = LAPACKE_dgbsv(LAPACK_ROW_MAJOR, la, kl, ku, NRHS, AB, la, ipiv, RHS, NRHS);

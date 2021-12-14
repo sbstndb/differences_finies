@@ -36,9 +36,10 @@ INCL= -I $(TPDIR)/include $(INCLBLASLAPACK)
 OBJENV= tp_env.o
 OBJTP2ITER= lib_poisson1D.o tp2_poisson1D_iter.o
 OBJTP2DIRECT= lib_poisson1D.o tp2_poisson1D_direct.o
+OBJEXERCICE = lib_poisson1D.o 3.o
 #
 
-all: bin/tp_testenv bin/tp2poisson1D_iter bin/tp2poisson1D_direct
+all: bin/tp_testenv bin/tp2poisson1D_iter bin/tp2poisson1D_direct bin/3
 
 testenv: bin/tp_testenv
 
@@ -58,6 +59,9 @@ tp2_poisson1D_iter.o: $(TPDIRSRC)/tp2_poisson1D_iter.c
 tp2_poisson1D_direct.o: $(TPDIRSRC)/tp2_poisson1D_direct.c
 	$(CC) $(OPTC) -c $(INCL) $(TPDIRSRC)/tp2_poisson1D_direct.c  
 
+3.o: $(TPDIRSRC)/3.c
+	$(CC) $(OPTC) -c $(INCL) $(TPDIRSRC)/3.c  
+
 bin/tp_testenv: $(OBJENV) 
 	$(CC) -o bin/tp_testenv $(OPTC) $(OBJENV) $(LIBS)
 
@@ -67,6 +71,9 @@ bin/tp2poisson1D_iter: $(OBJTP2ITER)
 bin/tp2poisson1D_direct: $(OBJTP2DIRECT)
 	$(CC) -o bin/tp2poisson1D_direct $(OPTC) $(OBJTP2DIRECT) $(LIBS)
 
+bin/3: $(OBJEXERCICE)
+	$(CC) -o bin/3 $(OPTC) $(OBJEXERCICE) $(LIBS)
+
 run_testenv:
 	bin/tp_testenv
 
@@ -75,6 +82,10 @@ run_tp2poisson1D_iter:
 
 run_tp2poisson1D_direct:
 	bin/tp2poisson1D_direct
+
+run_3:
+	bin/3
+
 
 clean:
 	rm *.o bin/*
