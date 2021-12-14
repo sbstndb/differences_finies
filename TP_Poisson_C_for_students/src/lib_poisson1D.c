@@ -5,6 +5,7 @@
 /**********************************************/
 #include "lib_poisson1D.h"
 
+
 void set_GB_operator_rowMajor_poisson1D(double* AB, int *lab, int *la, int *kv){
 	int ii, jj, kk;
 	for (kk = 0 ; kk < (*kv); kk++){
