@@ -30,10 +30,10 @@ int main(int argc,char *argv[]){
 	int info;
 	int NRHS;
 	double T0, T1;
-	double *RHS_col, *RHS_row, *EX_SOL, *X_col, *X_row;
+	double *RHS_col, *RHS_row, *EX_SOL, *coord_col, *coord_row, *x_col, *x_row;
 	double *AB_col, *AB_row;
 	// kv est a 0 pour le produit matriciel , ou 1 sinon 
-	double temp, relres;
+	double temp, relres_col, relres_row;
 
 	NRHS=1;
 	nbpoints=8;
@@ -45,17 +45,20 @@ int main(int argc,char *argv[]){
 	RHS_col=(double *) malloc(sizeof(double)*la);
 	RHS_row=(double *) malloc(sizeof(double)*la);
 	EX_SOL=(double *) malloc(sizeof(double)*la);
-	X_col=(double *) malloc(sizeof(double)*la);
-	X_row=(double *) malloc(sizeof(double)*la);
+	coord_col=(double *) malloc(sizeof(double)*la);
+	coord_row=(double *) malloc(sizeof(double)*la);
+	x_col=(double *) malloc(sizeof(double)*la);
+	x_row=(double *) malloc(sizeof(double)*la);
+
 	
-	set_grid_points_1D(X_col, &la);
-	set_grid_points_1D(X_row, &la);
+	set_grid_points_1D(coord_col, &la);
+	set_grid_points_1D(coord_row, &la);
 		
 	set_dense_RHS_DBC_1D(RHS_col,&la,&T0,&T1);
 	set_dense_RHS_DBC_1D(RHS_row,&la,&T0,&T1);
 	
-	set_analytical_solution_DBC_1D(EX_SOL, X_col, &la, &T0, &T1);	
-	set_analytical_solution_DBC_1D(EX_SOL, X_row, &la, &T0, &T1);
+	set_analytical_solution_DBC_1D(EX_SOL, coord_col, &la, &T0, &T1);	
+	set_analytical_solution_DBC_1D(EX_SOL, coord_row, &la, &T0, &T1);
 
 
 
@@ -72,11 +75,13 @@ int main(int argc,char *argv[]){
 	/* working array for pivot used by LU Factorization */
 	ipiv = (int *) calloc(la, sizeof(int));
 
-	set_grid_points_1D(X_col, &la);
-	set_grid_points_1D(X_row, &la);
+	set_grid_points_1D(coord_col, &la);
+	set_grid_points_1D(coord_row, &la);
 	set_dense_RHS_DBC_1D(RHS_col,&la,&T0,&T1);
 	set_dense_RHS_DBC_1D(RHS_row,&la,&T0,&T1);
-	set_analytical_solution_DBC_1D(EX_SOL, X_col, &la, &T0, &T1);
+	set_dense_RHS_DBC_1D(x_col,&la,&T0,&T1);
+	set_dense_RHS_DBC_1D(x_row,&la,&T0,&T1);
+	set_analytical_solution_DBC_1D(EX_SOL, coord_col, &la, &T0, &T1);
 
 
 	// for col
@@ -85,27 +90,62 @@ int main(int argc,char *argv[]){
 
 	double before = (double)rdtsc();
 	for (int i = 0 ; i < it ; i++){	
-		write_GB_operator_colMajor_poisson1D(AB_col, &lab, &la, "AB_col.dat");
-		info = LAPACKE_dgbsv(LAPACK_COL_MAJOR, la, kl, ku, NRHS, AB_col, lab, ipiv, RHS_col, la);
+		write_GB_operator_colMajor_poisson1D(AB_col, &lab, &la, "AB_col_3.dat");
+		info = LAPACKE_dgbsv(LAPACK_COL_MAJOR, la, kl, ku, NRHS, AB_col, lab, ipiv, x_col, la);
 	}
 	double after = (double)rdtsc();
 	printf(" %lf\n", (after - before)/it);	
-	
-	write_xy(RHS_col, X_col, &la, "SOL_col.dat");
+
+	write_xy(x_col, coord_col, &la, "SOL_col_3.dat");
  	printf("\n INFO DGBSV COL = %d\n",info);
 
 	// for row
 	printf("--------- Poisson ROW ---------\n\n");	
 	set_GB_operator_rowMajor_poisson1D(AB_row, &lab, &la, &kv);
-	write_GB_operator_rowMajor_poisson1D(AB_row, &lab, &la, "AB_row.dat");
+	write_GB_operator_rowMajor_poisson1D(AB_row, &lab, &la, "AB_row_3.dat");
 	
 	before = (double)rdtsc();
 	for (int i = 0 ; i < it ; i++){		
-		info = LAPACKE_dgbsv(LAPACK_ROW_MAJOR, la, kl, ku, NRHS, AB_row, la, ipiv, RHS_row, NRHS);	 
+		info = LAPACKE_dgbsv(LAPACK_ROW_MAJOR, la, kl, ku, NRHS, AB_row, la, ipiv, x_row, NRHS);	 
 	}
 	after = (double)rdtsc();
 	printf(" %lf\n", (after - before)/it);
 	
-	write_xy(RHS_row, X_row, &la, "SOL_row.dat");
+	write_xy(x_row, coord_row, &la, "SOL_row_3.dat");
 	printf("\n INFO DGBSV ROW = %d\n",info);
+	
+	/* Relative residual */
+	temp = cblas_ddot(la, x_col, 1, x_col, 1);
+	temp = sqrt(temp);
+	cblas_daxpy(la, -1.0, x_col, 1, EX_SOL, 1);
+	relres_col = cblas_ddot(la, EX_SOL, 1, EX_SOL, 1);
+	relres_col = sqrt(relres_col);
+	relres_col = relres_col / temp;
+	
+		
+	set_analytical_solution_DBC_1D(EX_SOL, coord_row, &la, &T0, &T1);	
+	temp = cblas_ddot(la, x_row, 1, x_col, 1);
+	temp = sqrt(temp);
+	cblas_daxpy(la, -1.0, x_row, 1, EX_SOL, 1);
+	relres_row = cblas_ddot(la, EX_SOL, 1, EX_SOL, 1);
+	relres_row = sqrt(relres_row);
+	relres_row = relres_row / temp;	
+	
+
+	printf("\nThe relative residual error is relres = %e (col)\n",relres_col);
+	printf("\nThe relative residual error is relres = %e (row)\n",relres_row);
+
+	free(RHS_col);
+	free(RHS_row);
+	free(EX_SOL);
+	free(x_col);
+	free(x_row);
+	free(coord_col);
+	free(coord_row);
+	free(AB_col);
+	free(AB_row);
+	free(ipiv);
+
+	printf("\n\n--------- End -----------\n");	
+	
 }

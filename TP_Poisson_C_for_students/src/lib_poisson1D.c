@@ -41,6 +41,23 @@ void set_GB_operator_colMajor_poisson1D(double* AB, int *lab, int *la, int *kv){
   AB[ (*lab)*(*la) - 1 ] = 0.0;
 }
 
+void set_GB_operator_rowMajor_poisson1D_Id(double* AB, int *lab, int *la, int *kv){
+	int ii, jj, kk;
+	for (kk = 0 ; kk < (*kv); kk++){
+		for ( jj = 0 ; jj < (*la) ; jj++){
+			AB[jj + kk * (*la)] = 0 ; 
+		}
+	}
+	for (kk = 0 ; kk < (*la) ; kk++){
+		AB[ (*kv)*(*la) + kk ] = 0 ;
+		AB[ (*kv)*(*la) + kk + 1 * (*la)] = 1 ;
+		AB[ (*kv)*(*la) + kk + 2 * (*la) ] = 0 ;			 		
+	}
+  AB[0] = 0.0;
+  if (*kv == 1) { AB[(*la)] = 0 ;}	
+  AB[ (*lab)*(*la) - 1 ] = 0.0;
+}
+
 void set_GB_operator_colMajor_poisson1D_Id(double* AB, int *lab, int *la, int *kv){
   int ii, jj, kk;
   for (jj = 0 ; jj < (*la) ; jj++){
