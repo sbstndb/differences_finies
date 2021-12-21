@@ -31,6 +31,7 @@ int main(int argc,char *argv[]){
 
 	nbpoints=8;
 	la=nbpoints-2;
+	printf("Dimension : %d\n",la);
 	kv=0;
 	ku=1;
 	kl=1;
@@ -43,7 +44,7 @@ int main(int argc,char *argv[]){
 	// AB initialise aleatoire
 	// On doit avoir y = beta * y_old
 	//////////////////////////////////////////
-	printf("--------- Exercice 4 - verification 1  ---------\n\n");	
+	printf("\n--------- Exercice 4 - verification 1  ---------\n");	
 	allocation(&x_col, &x_row,  &y_col,  &y_row,  &AB_col,  &AB_row,  la, lab) ; 
 	
 	y_row_init = malloc(sizeof(double)*la);
@@ -141,7 +142,7 @@ int main(int argc,char *argv[]){
 	// AB initialise nul sauf sur une valeur precise
 	// tel que Ax = v avec v nul sauf sur une valeur precise
 	//////////////////////////////////////////
-	printf("--------- Exercice 4 - verification 2  ---------\n\n");	
+	printf("\n--------- Exercice 4 - verification 2  ---------\n");	
 	allocation(&x_col, &x_row,  &y_col,  &y_row,  &AB_col,  &AB_row,  la, lab) ; 
 
 	for(int i = 0 ; i <  la; i++){
@@ -159,7 +160,7 @@ int main(int argc,char *argv[]){
 	}
 	
 	int position = (int)(la/2);
-	printf("position : %d\n", position);
+
 	float value = 5.54345 ; 
 	AB_row[2 * la + position] = value ; 
 	AB_col[3 * position] = value ; 
@@ -198,8 +199,7 @@ int main(int argc,char *argv[]){
 	else{
 		printf("Resultat  ROW 2 FAUX \n");	
 	}
-	printf("Valeur colonnes : %lf\n",res_col) ; 	
-	printf("Valeur lignes : %lf\n",res_row) ;	
+	
 	
 	write_GB_operator_colMajor_poisson1D(AB_col, &lab, &la, "AB_col_4_2.dat");	
 	write_GB_operator_rowMajor_poisson1D(AB_row, &lab, &la, "AB_row_4_2.dat");		
@@ -217,7 +217,7 @@ int main(int argc,char *argv[]){
 	// AB identite
 	// On doit avoir y = alpha * x
 	//////////////////////////////////////////
-	printf("--------- Exercice 4 - verification 3  ---------\n\n");	
+	printf("\n--------- Exercice 4 - verification 3  ---------\n");	
 	allocation(&x_col, &x_row,  &y_col,  &y_row,  &AB_col,  &AB_row,  la, lab) ; 
 	
 	y_row_init = malloc(sizeof(double)*la);
@@ -303,7 +303,7 @@ int main(int argc,char *argv[]){
 	// AB identite
 	// On doit avoir y = beta y_old + alpha * x
 	//////////////////////////////////////////
-	printf("--------- Exercice 4 - verification 4  ---------\n\n");	
+	printf("\n--------- Exercice 4 - verification 4  ---------\n");	
 	allocation(&x_col, &x_row,  &y_col,  &y_row,  &AB_col,  &AB_row,  la, lab) ; 
 	
 	y_row_init = malloc(sizeof(double)*la);
