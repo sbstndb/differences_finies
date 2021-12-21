@@ -88,9 +88,9 @@ int main(int argc,char *argv[]){
 	printf("--------- Poisson COL ---------\n\n");
 	set_GB_operator_colMajor_poisson1D(AB_col, &lab, &la, &kv);	
 
+	write_GB_operator_colMajor_poisson1D(AB_col, &lab, &la, "AB_col_3.dat");
 	double before = (double)rdtsc();
 	for (int i = 0 ; i < it ; i++){	
-		write_GB_operator_colMajor_poisson1D(AB_col, &lab, &la, "AB_col_3.dat");
 		info = LAPACKE_dgbsv(LAPACK_COL_MAJOR, la, kl, ku, NRHS, AB_col, lab, ipiv, x_col, la);
 	}
 	double after = (double)rdtsc();
@@ -124,16 +124,39 @@ int main(int argc,char *argv[]){
 	
 		
 	set_analytical_solution_DBC_1D(EX_SOL, coord_row, &la, &T0, &T1);	
-	temp = cblas_ddot(la, x_row, 1, x_col, 1);
+	temp = cblas_ddot(la, x_row, 1, x_row, 1);
 	temp = sqrt(temp);
 	cblas_daxpy(la, -1.0, x_row, 1, EX_SOL, 1);
 	relres_row = cblas_ddot(la, EX_SOL, 1, EX_SOL, 1);
 	relres_row = sqrt(relres_row);
 	relres_row = relres_row / temp;	
+	set_analytical_solution_DBC_1D(EX_SOL, coord_row, &la, &T0, &T1);	
 	
+	// erreur max
+	double tmp_row = 0.0 ; 
+	double tmp_col = 0.0 ; 
+	double norm_inf = 0.0 ; 
+	for (int i = 0 ; i < la  ; i++){
+		if (fabs(x_col[i] - EX_SOL[i]) > tmp_col){
+			tmp_col = fabs(x_col[i] - EX_SOL[i]);
+			
+		}
+		if (fabs(x_row[i] - EX_SOL[i]) > tmp_row){
+			tmp_row = fabs(x_row[i] - EX_SOL[i]);
+		}
+		if (fabs(EX_SOL[i] * EX_SOL[i]) > norm_inf){
+			norm_inf = EX_SOL[i] * EX_SOL[i];
+		}
+	}
 
 	printf("\nThe relative residual error is relres = %e (col)\n",relres_col);
 	printf("\nThe relative residual error is relres = %e (row)\n",relres_row);
+
+	printf("\nThe inf relative residual error is relres = %e (col)\n",(tmp_col/norm_inf));
+	printf("\nThe inf relative residual error is relres = %e (row)\n",(tmp_row/norm_inf));
+	
+	printf("\nThe inf norm is relres = %e (row)\n",norm_inf);
+
 
 	free(RHS_col);
 	free(RHS_row);

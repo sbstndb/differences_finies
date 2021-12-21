@@ -27,3 +27,5 @@ double eigmin_poisson1D(int *la);
 double richardson_alpha_opt(int *la);
 void richardson_alpha(double *AB, double *RHS, double *X, double *alpha_rich, int *lab, int *la,int *ku, int*kl, double *tol, int *maxit);
 void LU_tri_col(double* A, double* L, double* U, int* la);
+void allocation(double** x_col, double** x_row, double** y_col, double** y_row, double** AB_col, double** AB_row, int la, int lab);
+void deallocation(double** x_col, double** x_row, double** y_col, double** y_row, double** AB_col, double** AB_row) ; 

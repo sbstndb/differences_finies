@@ -71,7 +71,7 @@ void set_GB_operator_colMajor_poisson1D_Id(double* AB, int *lab, int *la, int *k
     AB[kk + *kv+1] = 1.0;
     AB[kk + *kv+2] = 0.0;
   }
-  AB[1] = 0.0;
+  AB[1] = 1.0; // !!! erreur 
   AB[(*lab) * (*la) - 1] = 0.0;
 }
 
@@ -236,6 +236,25 @@ void LU_tri_col(double* A, double* L, double* U, int* la){
 	U[1 + 3 * ((*la) - 1 )] = A[1 + 3 * ((*la) - 1 )] - A[-1 + 3 * ((*la) - 1 )]*L[3 * ((*la) - 1 )] ; 
 	
 }
+
+void allocation(double** x_col, double** x_row, double** y_col, double** y_row, double** AB_col, double** AB_row, int la,int lab){
+	*x_col = malloc(sizeof(double)*la);
+	*x_row = malloc(sizeof(double)*la);
+	*y_col = malloc(sizeof(double)*la);
+	*y_row = malloc(sizeof(double)*la);
+	*AB_col = malloc(sizeof(double)*lab*la);
+	*AB_row = malloc(sizeof(double)*lab*la);
+}
+void deallocation(double** x_col, double** x_row, double** y_col, double** y_row, double** AB_col, double** AB_row){
+	free(*AB_col);
+	free(*AB_row);
+	free(*x_col);
+	free(*x_row);
+	free(*y_col);
+	free(*y_row);
+}
+
+
 
 
 double richardson_alpha_opt(int *la){
