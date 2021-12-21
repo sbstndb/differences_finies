@@ -20,7 +20,7 @@ unsigned long long rdtsc(void)
 int main(int argc,char *argv[]){
 
 
-	int it = 100 ; 
+	int it = 1 ; 
 
 	int ierr;
 	int jj;
@@ -36,7 +36,7 @@ int main(int argc,char *argv[]){
 	double temp, relres;
 
 	NRHS=1;
-	nbpoints=80;
+	nbpoints=8;
 	la=nbpoints-2;
 	T0=-5.0;
 	T1=5.0;
@@ -85,7 +85,7 @@ int main(int argc,char *argv[]){
 
 	double before = (double)rdtsc();
 	for (int i = 0 ; i < it ; i++){	
-		//write_GB_operator_colMajor_poisson1D(AB_col, &lab, &la, "AB_col.dat");
+		write_GB_operator_colMajor_poisson1D(AB_col, &lab, &la, "AB_col.dat");
 		info = LAPACKE_dgbsv(LAPACK_COL_MAJOR, la, kl, ku, NRHS, AB_col, lab, ipiv, RHS_col, la);
 	}
 	double after = (double)rdtsc();
@@ -97,7 +97,7 @@ int main(int argc,char *argv[]){
 	// for row
 	printf("--------- Poisson ROW ---------\n\n");	
 	set_GB_operator_rowMajor_poisson1D(AB_row, &lab, &la, &kv);
-	//write_GB_operator_rowMajor_poisson1D(AB_row, &lab, &la, "AB_row.dat");
+	write_GB_operator_rowMajor_poisson1D(AB_row, &lab, &la, "AB_row.dat");
 	
 	before = (double)rdtsc();
 	for (int i = 0 ; i < it ; i++){		

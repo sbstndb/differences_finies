@@ -180,6 +180,47 @@ double eigmin_poisson1D(int *la){
   return eigmin;
 }
 
+
+
+void LU_tri_col(double* A, double* L, double* U, int* la){
+	// A est matrice bande triangulaire colonne
+	// L et U reprennent alors le meme format 
+	/*	
+	function [L,U] = lutrig(A)
+	[n, n2] = size(A); 
+	L = eye(n,n);
+	U = zeros(n,n)
+	U(1,1) = A(1,1) ; 
+	L(2,1) = A(2,1) / A(1,1) ;
+	U(1,2) = A(1,2);
+	for i = [2:n-1]
+	    U(i,i+1)=A(i,i+1);
+	    U(i,i)=A(i,i)-A(i-1,i)*L(i,i-1);
+	    L(i+1,i)=A(i+1,i)/U(i,i);
+	end
+	U(n,n)=A(n,n)-A(n-1,n)*L(n,n-1);
+	end
+	*/
+	
+	for (int i = 0 ; i < (*la) ; i ++){
+		L[1 + i*3] = 1.0 ; 
+	}	
+	
+	U[1] = A[1] ; 
+	U[2] = A[2] ; 
+	L[3] = A[3] / A[1] ; 
+	
+
+	for (int i = 1 ; i < (*la) - 1 ; i++){
+		U[2 + 3 * i] = A[2 + 3 * i] ; 
+		U[1 + 3 * i] = A[1 + 3 * i] - A[-1 + 3 * i]*L[3 * i] ; 
+		L[3 + 3 * i] = A[3 + 3 * i]/U[1 + 3 * i] ; 
+	}	 
+	U[1 + 3 * ((*la) - 1 )] = A[1 + 3 * ((*la) - 1 )] - A[-1 + 3 * ((*la) - 1 )]*L[3 * ((*la) - 1 )] ; 
+	
+}
+
+
 double richardson_alpha_opt(int *la){
   //TODO
 }
