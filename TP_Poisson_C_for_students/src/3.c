@@ -19,7 +19,6 @@ unsigned long long rdtsc(void)
 
 int main(int argc,char *argv[]){
 
-
 	int it = 1 ; 
 
 	int ierr;

@@ -108,6 +108,9 @@ run_4:
 
 run_5:
 	bin/5
+	
+run_all:
+	bin/3 && bin/4 && bin/5
 
 clean:
 	rm *.o bin/*

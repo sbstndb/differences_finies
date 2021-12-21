@@ -45,7 +45,7 @@ int main(int argc,char *argv[]){
 	}
 
 
-	printf("--------- Poisson COL ---------\n\n");
+	printf("--------- Factorisation LU trig ---------\n\n");
 	set_GB_operator_colMajor_poisson1D(AB, &lab, &la, &kv);	
 
 	
@@ -58,9 +58,9 @@ int main(int argc,char *argv[]){
 	double after = (double)rdtsc();
 	printf(" %lf\n", (after - before)/it);	
 	
-	write_GB_operator_colMajor_poisson1D(AB, &lab, &la, "AB.dat");		
-	write_GB_operator_colMajor_poisson1D(L, &lab, &la, "L.dat");	
-	write_GB_operator_colMajor_poisson1D(U, &lab, &la, "U.dat");	
+	write_GB_operator_colMajor_poisson1D(AB, &lab, &la, "AB_4_5.dat");		
+	write_GB_operator_colMajor_poisson1D(L, &lab, &la, "L_4_5.dat");	
+	write_GB_operator_colMajor_poisson1D(U, &lab, &la, "U_4_5.dat");	
 	free(AB);
 	free(L); 
 	free(U);

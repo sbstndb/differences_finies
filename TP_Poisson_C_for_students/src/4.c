@@ -20,6 +20,7 @@ unsigned long long rdtsc(void)
 
 int main(int argc,char *argv[]){
 
+
 	int nbpoints, la;
 	int ku, kl, kv, lab;
 	
