@@ -31,5 +31,19 @@ $ make run_target
 Execute ./bin/target
 
 
+##########################################################
+# README
+#
+# Modification by S. DUBOIS
+##########################################################
+ 
+ $ make run_target
+Execute ./bin/3
+Execute ./bin/4
+Execute ./bin/5
 
+or make run_all ! 
+ 
+ 
+ 
  

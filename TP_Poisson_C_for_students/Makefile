@@ -43,7 +43,7 @@ OBJEXERCICE5 = lib_poisson1D.o 5.o
 
 #
 
-all: bin/tp_testenv bin/tp2poisson1D_iter bin/tp2poisson1D_direct bin/3 bin/4 bin/5
+all: bin/tp_testenv bin/tp2poisson1D_direct bin/3 bin/4 bin/5
 
 testenv: bin/tp_testenv
 
@@ -94,8 +94,8 @@ bin/5: $(OBJEXERCICE5)
 run_testenv:
 	bin/tp_testenv
 
-run_tp2poisson1D_iter:
-	bin/tp2poisson1D_iter
+#run_tp2poisson1D_iter:
+#	bin/tp2poisson1D_iter
 
 run_tp2poisson1D_direct:
 	bin/tp2poisson1D_direct
@@ -110,7 +110,7 @@ run_5:
 	bin/5
 	
 run_all:
-	bin/3 && bin/4 && bin/5
+	bin/tp_testenv && bin/tp2poisson1D_direct   bin/3 && bin/4 && bin/5
 
 clean:
 	rm *.o bin/*
