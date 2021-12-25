@@ -222,12 +222,9 @@ void LU_tri_col(double* A, double* L, double* U, int* la){
 	for (int i = 0 ; i < (*la) ; i ++){
 		L[1 + i*3] = 1.0 ; 
 	}	
-	
 	U[1] = A[1] ; 
 	U[2] = A[2] ; 
 	L[3] = A[3] / A[1] ; 
-	
-
 	for (int i = 1 ; i < (*la) - 1 ; i++){
 		U[2 + 3 * i] = A[2 + 3 * i] ; 
 		U[1 + 3 * i] = A[1 + 3 * i] - A[-1 + 3 * i]*L[3 * i] ; 
